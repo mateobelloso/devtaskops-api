@@ -75,3 +75,13 @@ jobs:
 
         with:
           command: test
+
+      - name: Generate SBOM
+        run: npm run sbom
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+
+        with:
+          name: sbom
+          path: sbom.json
