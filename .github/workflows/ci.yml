@@ -55,6 +55,9 @@ jobs:
       - name: Run migrations
         run: npx prisma migrate deploy
 
+      - name: Run lint
+        run: npm run lint
+
       - name: Run tests
         run: npm test
 
