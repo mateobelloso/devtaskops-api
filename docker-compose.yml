@@ -1,0 +1,41 @@
+services:
+
+  api:
+    build: .
+    container_name: devtaskops-api
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      DATABASE_URL: postgresql://devops:devops@postgres:5432/devtaskops?schema=public
+      PORT: 3000
+
+    depends_on:
+      - postgres
+
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+    command: npm run dev
+
+  postgres:
+    image: postgres:16
+    container_name: devtaskops-postgres
+
+    restart: always
+
+    environment:
+      POSTGRES_DB: devtaskops
+      POSTGRES_USER: devops
+      POSTGRES_PASSWORD: devops
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
