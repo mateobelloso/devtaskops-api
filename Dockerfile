@@ -1,32 +1,14 @@
-FROM node:24-alpine AS builder
-
-WORKDIR /app
-
-COPY package*.json ./
-
-RUN npm install
-
-COPY . .
-
-RUN npm run build
-
-RUN npx prisma generate
-
-
-
 FROM node:24-alpine
 
 WORKDIR /app
 
 COPY package*.json ./
+RUN npm install
 
-RUN npm install --omit=dev
+COPY . .
 
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/prisma ./prisma
+RUN npx prisma generate
 
 EXPOSE 3000
 
-CMD ["node", "dist/server.js"]
+CMD ["npm", "run", "dev"]

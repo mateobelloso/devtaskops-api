@@ -37,5 +37,28 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  prometheus:
+    image: prom/prometheus
+    container_name: devtaskops-prometheus
+
+    ports:
+      - "9090:9090"
+
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+
+    depends_on:
+      - api
+  
+  grafana:
+    image: grafana/grafana
+    container_name: devtaskops-grafana
+
+    ports:
+      - "3001:3000"
+
+    depends_on:
+      - prometheus
+
 volumes:
   postgres_data:
