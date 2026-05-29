@@ -67,6 +67,36 @@ docker-compose up --build
 
 Esto iniciará la aplicación y la base de datos definida en `docker-compose.yml`.
 
+Terraform (opcional)
+
+También se puede usar Terraform para ejecutar `docker compose` localmente y administrar el ciclo de vida de los contenedores.
+
+1. Inicializar Terraform:
+
+```bash
+terraform init
+```
+
+2. Revisar el plan de ejecución:
+
+```bash
+terraform plan
+```
+
+3. Aplicar la configuración:
+
+```bash
+terraform apply
+```
+
+4. Para bajar los servicios:
+
+```bash
+terraform destroy
+```
+
+Esto usa `main.tf` para ejecutar `docker compose -f docker-compose.yml up -d` en el entorno local.
+
 Tests
 
 ```bash
