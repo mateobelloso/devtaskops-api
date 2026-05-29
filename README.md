@@ -69,7 +69,9 @@ Esto iniciará la aplicación y la base de datos definida en `docker-compose.yml
 
 Terraform (opcional)
 
-También se puede usar Terraform para ejecutar `docker compose` localmente y administrar el ciclo de vida de los contenedores.
+Terraform ahora crea una red Docker dedicada y despliega contenedores en un entorno concreto, en lugar de solo ejecutar `docker compose`.
+
+Por defecto se usa el ambiente `dev`, pero puedes cambiarlo con la variable `environment`.
 
 1. Inicializar Terraform:
 
@@ -80,22 +82,38 @@ terraform init
 2. Revisar el plan de ejecución:
 
 ```bash
-terraform plan
+terraform plan -var="environment=dev"
 ```
 
-3. Aplicar la configuración:
+3. Aplicar el ambiente:
 
 ```bash
-terraform apply
+terraform apply -var="environment=dev"
 ```
 
-4. Para bajar los servicios:
+4. Para destruir el ambiente:
 
 ```bash
-terraform destroy
+terraform destroy -var="environment=dev"
 ```
 
-Esto usa `main.tf` para ejecutar `docker compose -f docker-compose.yml up -d` en el entorno local.
+Ambientes válidos:
+- `dev`
+- `staging`
+- `test`
+- `prod`
+
+Cada entorno crea una red Docker propia y nombres de contenedor distintos:
+- `devtaskops-dev`
+- `devtaskops-staging`
+- `devtaskops-test`
+- `devtaskops-prod`
+
+También se asignan puertos locales diferentes por entorno para poder probar varios ambientes en paralelo:
+- API: `3000` / `3001` / `3002` / `3003`
+- Postgres: `5432` / `5433` / `5434` / `5435`
+- Prometheus: `9090` / `9091` / `9092` / `9093`
+- Grafana: `3001` / `3004` / `3005` / `3006`
 
 Tests
 
