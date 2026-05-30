@@ -6,4 +6,4 @@ scrape_configs:
   - job_name: 'devtaskops-api'
 
     static_configs:
-      - targets: ['api:3000']
+      - targets: ['devtaskops-api-dev:3000']

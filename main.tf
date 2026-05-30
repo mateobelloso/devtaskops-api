@@ -33,7 +33,7 @@ locals {
   postgres_host_port = lookup({dev = 5432, staging = 5433, test = 5434, prod = 5435}, var.environment)
   prometheus_host_port = lookup({dev = 9090, staging = 9091, test = 9092, prod = 9093}, var.environment)
   grafana_host_port  = lookup({dev = 3001, staging = 3004, test = 3005, prod = 3006}, var.environment)
-  db_url = "postgresql://devops:devops@postgres:5432/devtaskops?schema=public"
+  db_url = "postgresql://devops:devops@${local.postgres_container_name}:5432/devtaskops?schema=public"
   api_dockerfile = var.environment == "dev" ? "Dockerfile" : "Dockerfile.prod"
 }
 
@@ -72,7 +72,7 @@ resource "docker_container" "postgres" {
   }
 
   volumes {
-    host_path      = docker_volume.postgres_data.name
+    volume_name    = docker_volume.postgres_data.name
     container_path = "/var/lib/postgresql/data"
   }
 
@@ -83,7 +83,7 @@ resource "docker_container" "postgres" {
 
 resource "docker_container" "api" {
   name  = local.api_container_name
-  image = docker_image.api.latest
+  image = docker_image.api.image_id
   restart = "always"
 
   env = [
@@ -118,7 +118,7 @@ resource "docker_container" "prometheus" {
   }
 
   volumes {
-    host_path      = "${path.module}/monitoring/prometheus.yml"
+    host_path      = abspath("${path.module}/monitoring/prometheus.yml")
     container_path = "/etc/prometheus/prometheus.yml"
   }
 
